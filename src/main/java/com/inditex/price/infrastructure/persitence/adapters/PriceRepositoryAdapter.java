@@ -24,10 +24,11 @@ import com.inditex.price.infrastructure.persitence.repositories.PriceJpaReposito
 public class PriceRepositoryAdapter implements PriceRepository {
     
     private final PriceJpaRepository priceJpaRepostory;
+    private final PriceEntityMapper priceEntityMapper;
     
-    @Autowired
-    public PriceRepositoryAdapter(PriceJpaRepository priceJpaRepostory) {
+    public PriceRepositoryAdapter(PriceJpaRepository priceJpaRepostory,PriceEntityMapper priceEntityMapper) {
         this.priceJpaRepostory = priceJpaRepostory;
+        this.priceEntityMapper=priceEntityMapper;
 
     }
     
@@ -40,7 +41,7 @@ public class PriceRepositoryAdapter implements PriceRepository {
         );
         
         return priceEntities.stream()
-                .map(PriceEntityMapper.INSTANCE::toDomain)
+                .map(priceEntityMapper::toDomain)
                 .collect(Collectors.toList());
     }
 }
