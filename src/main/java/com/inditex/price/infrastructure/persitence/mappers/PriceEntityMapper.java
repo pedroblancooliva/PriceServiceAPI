@@ -10,9 +10,9 @@ import com.inditex.price.infrastructure.persitence.entity.PriceJpaEntity;
  * Mantiene la separación entre la infraestructura y el dominio
  */
 @Mapper
-public interface PriceMapper {
+public interface PriceEntityMapper {
     
-	PriceMapper INSTANCE = Mappers.getMapper(PriceMapper.class);
+	PriceEntityMapper INSTANCE = Mappers.getMapper(PriceEntityMapper.class);
 	
     /**
      * Convierte la entidad JPA  a la entidad de dominio
