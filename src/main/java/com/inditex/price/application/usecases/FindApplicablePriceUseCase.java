@@ -29,7 +29,6 @@ public class FindApplicablePriceUseCase {
     private final PriceDomainService priceDomainService;
     private final PriceEntityMapper priceMapper;
     
-    @Autowired
     public FindApplicablePriceUseCase(PriceRepository priceRepository, 
                                      PriceDomainService priceDomainService,
                                      PriceEntityMapper priceMapper) {
