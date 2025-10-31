@@ -9,33 +9,20 @@ import com.inditex.price.domain.valueobject.BrandId;
 import com.inditex.price.domain.valueobject.ProductId;
 
 /**
- * Interface del repositorio  Price
- * Define el contrato para las operaciones sobre Price
+ * Repositorio del dominio para Price (Puerto)
+ * Define el contrato para el acceso a datos sin depender de la implementación
  */
 public interface PriceRepository {
     
-    /**
-     * Busca los precios a traves del Id de Producto el id de la cadena y la fecha para aplicar
+	 /**
+     * Busca precios aplicables para un producto de una marca en una fecha específica
+     * 
+     * @param brandId identificador de la marca/cadena
+     * @param productId identificador del producto
+     * @param applicationDate fecha de aplicación del precio
+     * @return lista de precios aplicables
      */
     List<Price> findApplicablePrices(ProductId productId, BrandId brandId, LocalDateTime applicationDate);
     
-    /**
-     * Busca por Id
-     */
-    Optional<Price> findById(Long id);
-    
-    /**
-     * Guarda un Price
-     */
-    Price save(Price price);
-    
-    /**
-     * Borra por Id
-     */
-    void deleteById(Long id);
-    
-    /**
-     * Busca todos los precios de un  producto y una cadena especificas
-     */
-    List<Price> findByProductAndBrand(ProductId productId, BrandId brandId);
+   
 }
