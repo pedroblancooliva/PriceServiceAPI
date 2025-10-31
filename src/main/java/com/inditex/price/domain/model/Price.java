@@ -1,102 +1,106 @@
 package com.inditex.price.domain.model;
 
+
+
 import java.time.LocalDateTime;
 import java.util.Objects;
 
 import com.inditex.price.domain.valueobject.BrandId;
-import com.inditex.price.domain.valueobject.DateRange;
 import com.inditex.price.domain.valueobject.Money;
 import com.inditex.price.domain.valueobject.Priority;
 import com.inditex.price.domain.valueobject.ProductId;
 
-
 /**
- * Domain Entity representing a Price.
- * Contains business logic and domain rules for pricing.
- * This is the heart of our domain model.
+ * Entidad de dominio que representa un precio con su tarifa aplicable
+ * Contiene toda la lógica de negocio relacionada con los precios
  */
 public class Price {
     
     private final Long id;
     private final BrandId brandId;
-    private final ProductId productId;
+    private final LocalDateTime startDate;
+    private final LocalDateTime endDate;
     private final Integer priceList;
-    private final DateRange validityPeriod;
+    private final ProductId productId;
     private final Priority priority;
     private final Money price;
     
-    public Price(Long id, BrandId brandId, ProductId productId, Integer priceList, 
-                 DateRange validityPeriod, Priority priority, Money price) {
-        this.id = id;
-        this.brandId = Objects.requireNonNull(brandId, "Brand ID cannot be null");
-        this.productId = Objects.requireNonNull(productId, "Product ID cannot be null");
-        this.priceList = Objects.requireNonNull(priceList, "Price list cannot be null");
-        this.validityPeriod = Objects.requireNonNull(validityPeriod, "Validity period cannot be null");
-        this.priority = Objects.requireNonNull(priority, "Priority cannot be null");
-        this.price = Objects.requireNonNull(price, "Price cannot be null");
+    public Price(Long id, BrandId brandId, LocalDateTime startDate, LocalDateTime endDate,
+                 Integer priceList, ProductId productId, Priority priority, Money price) {
         
-        if (priceList <= 0) {
-            throw new IllegalArgumentException("Price list must be positive");
+        validateDates(startDate, endDate);
+        validatePriceList(priceList);
+        validateRequiredFields(brandId, productId, priority, price);
+        
+        this.id = id;
+        this.brandId = brandId;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.priceList = priceList;
+        this.productId = productId;
+        this.priority = priority;
+        this.price = price;
+    }
+    
+    private void validateDates(LocalDateTime startDate, LocalDateTime endDate) {
+        if (startDate == null || endDate == null) {
+            throw new IllegalArgumentException("Las fechas de inicio y fin no pueden ser nulas");
+        }
+        if (startDate.isAfter(endDate)) {
+            throw new IllegalArgumentException("La fecha de inicio no puede ser posterior a la fecha de fin");
         }
     }
     
-    /**
-     * Business logic: Check if this price is applicable for the given criteria and date
-     */
-    public boolean isApplicableFor(ProductId productId, BrandId brandId, LocalDateTime applicationDate) {
-        return this.productId.equals(productId) 
-            && this.brandId.equals(brandId)
-            && this.validityPeriod.contains(applicationDate);
+    private void validatePriceList(Integer priceList) {
+        if (priceList == null || priceList <= 0) {
+            throw new IllegalArgumentException("La lista de precios debe ser un número positivo");
+        }
+    }
+    
+    private void validateRequiredFields(BrandId brandId, ProductId productId, Priority priority, Money price) {
+        if (brandId == null) throw new IllegalArgumentException("Brand ID no puede ser nulo");
+        if (productId == null) throw new IllegalArgumentException("Product ID no puede ser nulo");
+        if (priority == null) throw new IllegalArgumentException("Priority no puede ser nula");
+        if (price == null) throw new IllegalArgumentException("Price no puede ser nulo");
     }
     
     /**
-     * Business logic: Check if this price has higher priority than another
+     * Determina si este precio es aplicable en la fecha dada
+     */
+    public boolean isApplicableAt(LocalDateTime dateTime) {
+        if (dateTime == null) return false;
+        return !dateTime.isBefore(startDate) && !dateTime.isAfter(endDate);
+    }
+    
+    /**
+     * Determina si este precio tiene mayor prioridad que otro
      */
     public boolean hasHigherPriorityThan(Price other) {
         return this.priority.isHigherThan(other.priority);
     }
     
     /**
-     * Business logic: Check if this price is valid at a specific date
+     * Verifica si este precio corresponde al producto y marca dados
      */
-    public boolean isValidAt(LocalDateTime date) {
-        return validityPeriod.contains(date);
+    public boolean belongsTo(ProductId productId, BrandId brandId) {
+        return this.productId.equals(productId) && this.brandId.equals(brandId);
     }
     
     // Getters
-    public Long getId() {
-        return id;
-    }
-    
-    public BrandId getBrandId() {
-        return brandId;
-    }
-    
-    public ProductId getProductId() {
-        return productId;
-    }
-    
-    public Integer getPriceList() {
-        return priceList;
-    }
-    
-    public DateRange getValidityPeriod() {
-        return validityPeriod;
-    }
-    
-    public Priority getPriority() {
-        return priority;
-    }
-    
-    public Money getPrice() {
-        return price;
-    }
+    public Long getId() { return id; }
+    public BrandId getBrandId() { return brandId; }
+    public LocalDateTime getStartDate() { return startDate; }
+    public LocalDateTime getEndDate() { return endDate; }
+    public Integer getPriceList() { return priceList; }
+    public ProductId getProductId() { return productId; }
+    public Priority getPriority() { return priority; }
+    public Money getPrice() { return price; }
     
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
-        Price price = (Price) obj;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Price price = (Price) o;
         return Objects.equals(id, price.id);
     }
     
@@ -112,9 +116,80 @@ public class Price {
                 ", brandId=" + brandId +
                 ", productId=" + productId +
                 ", priceList=" + priceList +
-                ", validityPeriod=" + validityPeriod +
                 ", priority=" + priority +
                 ", price=" + price +
+                ", period=" + startDate + " to " + endDate +
                 '}';
+    }
+    
+    /**
+     * Método estático para crear un Builder
+     */
+    public static Builder builder() {
+        return new Builder();
+    }
+    
+    /**
+     * Patrón Builder para la construcción de objetos Price
+     * Proporciona una API fluida y legible para crear instancias
+     */
+    public static class Builder {
+        private Long id;
+        private BrandId brandId;
+        private LocalDateTime startDate;
+        private LocalDateTime endDate;
+        private Integer priceList;
+        private ProductId productId;
+        private Priority priority;
+        private Money price;
+        
+        private Builder() {}
+        
+        public Builder id(Long id) {
+            this.id = id;
+            return this;
+        }
+        
+        public Builder brandId(BrandId brandId) {
+            this.brandId = brandId;
+            return this;
+        }
+        
+        public Builder startDate(LocalDateTime startDate) {
+            this.startDate = startDate;
+            return this;
+        }
+        
+        public Builder endDate(LocalDateTime endDate) {
+            this.endDate = endDate;
+            return this;
+        }
+        
+        public Builder priceList(Integer priceList) {
+            this.priceList = priceList;
+            return this;
+        }
+        
+        public Builder productId(ProductId productId) {
+            this.productId = productId;
+            return this;
+        }
+        
+        public Builder priority(Priority priority) {
+            this.priority = priority;
+            return this;
+        }
+        
+        public Builder price(Money price) {
+            this.price = price;
+            return this;
+        }
+        
+        /**
+         * Construye la instancia de Price con todas las validaciones
+         */
+        public Price build() {
+            return new Price(id, brandId, startDate, endDate, priceList, productId, priority, price);
+        }
     }
 }
