@@ -5,7 +5,6 @@ import org.mapstruct.factory.Mappers;
 
 import com.inditex.price.application.dto.PriceQueryResponseDTO;
 import com.inditex.price.domain.model.Price;
-import com.inditex.price.infrastructure.persitence.entity.PriceJpaEntity;
 
 /**
  * Mapper que convierte entre entidades de dominio y DTOs de aplicación Facilita
