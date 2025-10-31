@@ -2,7 +2,7 @@ package com.inditex.price.application.dto;
 
 import java.time.LocalDateTime;
 
-import jakarta.validation.constraints.NotNull;
+import javax.validation.constraints.NotNull;
 
 /**
  * DTO para la consulta de precios

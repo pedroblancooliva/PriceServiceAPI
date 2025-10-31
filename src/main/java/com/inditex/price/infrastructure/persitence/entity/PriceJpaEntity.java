@@ -4,12 +4,12 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 
 
@@ -27,7 +27,7 @@ public class PriceJpaEntity {
     private Long id;
 
     @Column(name = "BRAND_ID", nullable = false)
-    private Integer brandId;
+    private Long brandId;
 
     @Column(name = "START_DATE", nullable = false)
     private LocalDateTime startDate;
@@ -39,7 +39,7 @@ public class PriceJpaEntity {
     private Integer priceList;
 
     @Column(name = "PRODUCT_ID", nullable = false)
-    private Integer productId;
+    private Long productId;
 
     @Column(name = "PRIORITY", nullable = false)
     private Integer priority;
@@ -54,10 +54,9 @@ public class PriceJpaEntity {
     public PriceJpaEntity() {
     }
 
-    public PriceJpaEntity(Long id, Integer brandId, LocalDateTime startDate, LocalDateTime endDate, 
-                         Integer priceList, Integer productId, Integer priority, 
+    public PriceJpaEntity(Long brandId, LocalDateTime startDate, LocalDateTime endDate, 
+                         Integer priceList, Long productId, Integer priority, 
                          BigDecimal price, String currency) {
-        this.id = id;
         this.brandId = brandId;
         this.startDate = startDate;
         this.endDate = endDate;
@@ -77,11 +76,11 @@ public class PriceJpaEntity {
         this.id = id;
     }
 
-    public Integer getBrandId() {
+    public Long getBrandId() {
         return brandId;
     }
 
-    public void setBrandId(Integer brandId) {
+    public void setBrandId(Long brandId) {
         this.brandId = brandId;
     }
 
@@ -109,11 +108,11 @@ public class PriceJpaEntity {
         this.priceList = priceList;
     }
 
-    public Integer getProductId() {
+    public Long getProductId() {
         return productId;
     }
 
-    public void setProductId(Integer productId) {
+    public void setProductId(Long productId) {
         this.productId = productId;
     }
 
