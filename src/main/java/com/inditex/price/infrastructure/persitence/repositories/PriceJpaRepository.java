@@ -22,7 +22,7 @@ public interface PriceJpaRepository extends JpaRepository<PriceJpaEntity, Long> 
      * Busca precios aplicables para un producto de una marca en una fecha específica
      * La fecha debe estar dentro del rango [startDate, endDate]
      */
-    @Query("SELECT p FROM PriceEntity p " +
+    @Query("SELECT p FROM PriceJpaEntity p " +
            "WHERE p.brandId = :brandId " +
            "AND p.productId = :productId " +
            "AND :applicationDate >= p.startDate " +
