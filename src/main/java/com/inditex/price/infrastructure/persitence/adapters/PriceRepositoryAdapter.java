@@ -13,7 +13,7 @@ import com.inditex.price.domain.repository.PriceRepository;
 import com.inditex.price.domain.valueobject.BrandId;
 import com.inditex.price.domain.valueobject.ProductId;
 import com.inditex.price.infrastructure.persitence.entity.PriceJpaEntity;
-import com.inditex.price.infrastructure.persitence.mappers.PriceMapper;
+import com.inditex.price.infrastructure.persitence.mappers.PriceEntityMapper;
 import com.inditex.price.infrastructure.persitence.repositories.PriceJpaRepository;
 
 /**
@@ -40,7 +40,7 @@ public class PriceRepositoryAdapter implements PriceRepository {
         );
         
         return priceEntities.stream()
-                .map(PriceMapper.INSTANCE::toDomain)
+                .map(PriceEntityMapper.INSTANCE::toDomain)
                 .collect(Collectors.toList());
     }
 }
