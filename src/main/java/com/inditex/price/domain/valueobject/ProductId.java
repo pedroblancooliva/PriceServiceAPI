@@ -8,16 +8,16 @@ import java.util.Objects;
  */
 public final class ProductId {
     
-    private final Integer value;
+    private final Long value;
     
-    public ProductId(Integer value) {
+    public ProductId(Long value) {
         if (value == null || value <= 0) {
             throw new IllegalArgumentException("Product ID must be a positive integer");
         }
         this.value = value;
     }
     
-    public Integer getValue() {
+    public Long getValue() {
         return value;
     }
     

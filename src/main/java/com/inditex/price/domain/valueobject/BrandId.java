@@ -8,16 +8,16 @@ import java.util.Objects;
  */
 public final class BrandId {
     
-    private final Integer value;
+    private final Long value;
     
-    public BrandId(Integer value) {
+    public BrandId(Long value) {
         if (value == null || value <= 0) {
             throw new IllegalArgumentException("Brand ID must be a positive integer");
         }
         this.value = value;
     }
     
-    public Integer getValue() {
+    public Long getValue() {
         return value;
     }
     
