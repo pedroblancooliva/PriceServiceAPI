@@ -11,13 +11,13 @@ public class PriceQueryResponseDTO {
     
     private Long productId;
     private Long brandId;
-    private Long priceList;
+    private Integer priceList;
     private BigDecimal price;
     private String currency;
     
     public PriceQueryResponseDTO() {}
     
-    public PriceQueryResponseDTO(Long productId, Long brandId, Long priceList, 
+    public PriceQueryResponseDTO(Long productId, Long brandId, Integer priceList, 
                             BigDecimal price, String currency) {
         this.productId = productId;
         this.brandId = brandId;
@@ -43,11 +43,11 @@ public class PriceQueryResponseDTO {
 		this.brandId = brandId;
 	}
 
-	public Long getPriceList() {
+	public Integer getPriceList() {
 		return priceList;
 	}
 
-	public void setPriceList(Long priceList) {
+	public void setPriceList(Integer priceList) {
 		this.priceList = priceList;
 	}
 
