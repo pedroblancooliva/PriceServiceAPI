@@ -30,8 +30,8 @@ public interface PriceMapperDTO {
     
     @Mapping(target = "productId", source="price.productId.value")
     @Mapping(target = "brandId", source="price.brandId.value")
-    @Mapping(target = "price", source="price.amount.value")
-    @Mapping(target = "currency", source="price.currency.value")
+    @Mapping(target = "price", source="price.price.amount")
+    @Mapping(target = "currency", source="price.price.currency")
     public PriceQueryResponseDTO toResponseDTO(Price price);
 
 }
