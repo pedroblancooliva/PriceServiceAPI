@@ -4,7 +4,6 @@ package com.inditex.price.application.usecases;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.inditex.price.application.dto.PriceQueryRequestDTO;
@@ -16,7 +15,6 @@ import com.inditex.price.domain.repository.PriceRepository;
 import com.inditex.price.domain.service.PriceDomainService;
 import com.inditex.price.domain.valueobject.BrandId;
 import com.inditex.price.domain.valueobject.ProductId;
-import com.inditex.price.infrastructure.persitence.mappers.PriceEntityMapper;
 
 /**
  * Caso de uso para consultar precios aplicables
@@ -27,14 +25,11 @@ public class FindApplicablePriceUseCase {
     
     private final PriceRepository priceRepository;
     private final PriceDomainService priceDomainService;
-    private final PriceEntityMapper priceMapper;
     
     public FindApplicablePriceUseCase(PriceRepository priceRepository, 
-                                     PriceDomainService priceDomainService,
-                                     PriceEntityMapper priceMapper) {
+                                     PriceDomainService priceDomainService) {
         this.priceRepository = priceRepository;
         this.priceDomainService = priceDomainService;
-        this.priceMapper = priceMapper;
     }
     
     /**
