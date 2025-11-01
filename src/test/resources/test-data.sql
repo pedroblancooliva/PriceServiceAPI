@@ -1,7 +1,7 @@
 -- Datos específicos para tests
 -- Estos datos representan los casos de test clásicos del ejercicio Inditex
 
-DROP TABLE IF EXISTS price;
+DROP TABLE IF EXISTS PRICES;
 
 CREATE TABLE PRICES (
     ID BIGINT AUTO_INCREMENT PRIMARY KEY,
