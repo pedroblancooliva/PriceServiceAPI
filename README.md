@@ -674,7 +674,7 @@ Este proyecto está licenciado bajo la **Licencia MIT** - ver el archivo [LICENS
 
 Para soporte técnico, consultas o contribuciones:
 
-- 📧 **Email**: pedroblancooliva@inditex.com
+- 📧 **Email**: pedro.blanco.oliva@gmail.com
 - 🐛 **Issues**: [GitHub Issues](https://github.com/pedroblancooliva/PriceServiceAPI/issues)
 - 📖 **Documentación**: [Wiki del Proyecto](https://github.com/pedroblancooliva/PriceServiceAPI/wiki)
 - 🔧 **API Documentation**: [Swagger UI](http://localhost:8080/swagger-ui.html) (cuando la app está ejecutándose)
