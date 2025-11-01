@@ -1,20 +1,24 @@
 package com.inditex.price.application.mapper;
 
+import java.math.BigDecimal;
+
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 import com.inditex.price.application.dto.PriceQueryResponseDTO;
 import com.inditex.price.domain.model.Price;
+import com.inditex.price.domain.valueobject.BrandId;
+import com.inditex.price.domain.valueobject.Money;
+import com.inditex.price.domain.valueobject.ProductId;
 
 /**
  * Mapper que convierte entre entidades de dominio y DTOs de aplicación Facilita
  * la separación entre capas
  */
 
-@Mapper
+@Mapper(componentModel = "spring") 
 public interface PriceMapperDTO {
-
     PriceMapperDTO INSTANCE = Mappers.getMapper(PriceMapperDTO.class);
 
     /**
@@ -27,4 +31,22 @@ public interface PriceMapperDTO {
     @Mapping(target = "currency", source = "price.price.currency")
     public PriceQueryResponseDTO toResponseDTO(Price price);
 
+    /**
+     * no genera las comprobaciones de los nulos
+     **/
+    default Long map(ProductId id) {
+        return id != null ? id.getValue() : null;
+    }
+
+    default Long map(BrandId id) {
+        return id != null ? id.getValue() : null;
+    }
+
+    default BigDecimal map(Money money) {
+        return money != null ? money.getAmount() : null;
+    }
+
+    default String mapCurrency(Money money) {
+        return money != null ? money.getCurrency() : null;
+    }
 }
