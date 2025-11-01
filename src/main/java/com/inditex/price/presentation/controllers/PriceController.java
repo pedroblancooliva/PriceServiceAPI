@@ -14,12 +14,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.inditex.price.application.dto.PriceQueryRequestDTO;
 import com.inditex.price.application.dto.PriceQueryResponseDTO;
 import com.inditex.price.application.usecases.FindApplicablePriceUseCase;
+import com.inditex.price.presentation.annotations.ApplicationDateParam;
+import com.inditex.price.presentation.annotations.BrandIdParam;
+import com.inditex.price.presentation.annotations.ProductIdParam;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
 
 /**
  * Controlador REST para consultas de precios
@@ -42,7 +42,7 @@ public class PriceController {
 	 * Consulta el precio aplicable para un producto de una marca en una fecha específica
 	 * 
 	 * @param applicationDate fecha de aplicación del precio
-	 * @param productId       identificador del producto  
+	 * @param productId       identificador del producto
 	 * @param brandId         identificador de la marca/cadena
 	 * @return precio aplicable con mayor prioridad
 	 */
@@ -50,40 +50,62 @@ public class PriceController {
 	@Operation(summary = "Consultar precio aplicable", 
 			   description = "Obtiene el precio aplicable para un producto de una marca en una fecha específica")
 	public ResponseEntity<PriceQueryResponseDTO> getApplicablePrice(
-			@RequestParam("applicationDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) 
-			@NotNull(message = "La fecha de aplicación es obligatoria") LocalDateTime applicationDate,
-
-			@RequestParam("productId") @NotNull(message = "El ID del producto es obligatorio") 
-			@Positive(message = "El ID del producto debe ser positivo") Long productId,
-
-			@RequestParam("brandId") @NotNull(message = "El ID de la marca es obligatorio") 
-			@Positive(message = "El ID de la marca debe ser positivo") Long brandId) {
+			@RequestParam("applicationDate") 
+			@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) 
+			@ApplicationDateParam
+			LocalDateTime applicationDate,
+			
+			@RequestParam("productId") 
+			@ProductIdParam
+			Long productId,
+			
+			@RequestParam("brandId") 
+			@BrandIdParam
+			Long brandId) {
 
 		long startTime = System.currentTimeMillis();
-		
-		logger.info("Iniciando consulta de precio - productId: {}, brandId: {}, fecha: {}", 
-				   productId, brandId, applicationDate);
+
+		logger.info("Iniciando consulta de precio - productId: {}, brandId: {}, fecha: {}",
+				productId, brandId, applicationDate);
 
 		try {
-			PriceQueryRequestDTO request = new PriceQueryRequestDTO(applicationDate, productId, brandId);
+			PriceQueryRequestDTO request = createPriceQueryRequest(applicationDate, productId, brandId);
 			logger.debug("Request DTO creado: {}", request);
-			
+
 			PriceQueryResponseDTO response = findApplicablePriceUseCase.execute(request);
-			
+
 			long duration = System.currentTimeMillis() - startTime;
-			
-			logger.info("Consulta completada exitosamente - productId: {}, brandId: {}, precio: {}, lista: {}, duración: {}ms", 
-					   productId, brandId, response.getPrice(), response.getPriceList(), duration);
+			logSuccessfulQuery(productId, brandId, response, duration);
 
 			return ResponseEntity.ok(response);
-			
+
 		} catch (Exception e) {
 			long duration = System.currentTimeMillis() - startTime;
-			
-			logger.error("Error en consulta de precio - productId: {}, brandId: {}, fecha: {}, duración: {}ms, error: {}", 
-						productId, brandId, applicationDate, duration, e.getMessage(), e);
-			
+			logErrorQuery(productId, brandId, applicationDate, duration, e);
 			throw e; // Re-lanzar para que el GlobalExceptionHandler la maneje
 		}
+	}
+
+	/**
+	 * Método auxiliar para crear el DTO de request
+	 */
+	private PriceQueryRequestDTO createPriceQueryRequest(LocalDateTime applicationDate, Long productId, Long brandId) {
+		return new PriceQueryRequestDTO(applicationDate, productId, brandId);
+	}
+
+	/**
+	 * Método auxiliar para logging de consultas exitosas
+	 */
+	private void logSuccessfulQuery(Long productId, Long brandId, PriceQueryResponseDTO response, long duration) {
+		logger.info("Consulta completada exitosamente - productId: {}, brandId: {}, precio: {}, lista: {}, duración: {}ms",
+				productId, brandId, response.getPrice(), response.getPriceList(), duration);
+	}
+
+	/**
+	 * Método auxiliar para logging de errores
+	 */
+	private void logErrorQuery(Long productId, Long brandId, LocalDateTime applicationDate, long duration, Exception e) {
+		logger.error("Error en consulta de precio - productId: {}, brandId: {}, fecha: {}, duración: {}ms, error: {}",
+				productId, brandId, applicationDate, duration, e.getMessage(), e);
 	}
 }
