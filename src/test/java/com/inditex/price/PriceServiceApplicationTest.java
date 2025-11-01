@@ -8,6 +8,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 
 /**
@@ -15,6 +16,7 @@ import org.springframework.test.context.TestPropertySource;
  * Verifica que la aplicación Spring Boot se inicie correctamente
  */
 @SpringBootTest
+@ActiveProfiles("test")
 @TestPropertySource(locations = "classpath:application-test.properties")
 class PriceServiceApplicationTest {
 
