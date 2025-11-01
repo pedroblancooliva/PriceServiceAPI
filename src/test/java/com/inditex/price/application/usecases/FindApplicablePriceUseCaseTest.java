@@ -199,7 +199,7 @@ class FindApplicablePriceUseCaseTest {
 
         when(priceRepository.findApplicablePrices(any(ProductId.class), any(BrandId.class), eq(applicationDate)))
                 .thenReturn(null);
-        when(priceDomainService.selectHighestPriorityPrice(null))
+        when(priceDomainService.selectHighestPriorityPrice(eq(Collections.emptyList())))
                 .thenReturn(Optional.empty());
 
         // When & Then
