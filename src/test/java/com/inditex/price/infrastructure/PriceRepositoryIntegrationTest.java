@@ -12,7 +12,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 
@@ -48,7 +47,7 @@ class PriceRepositoryIntegrationTest {
         assertNotNull(prices);
         assertFalse(prices.isEmpty());
         assertEquals(1, prices.size());
-        
+
         Price price = prices.get(0);
         assertEquals(productId, price.getProductId());
         assertEquals(brandId, price.getBrandId());
@@ -69,7 +68,7 @@ class PriceRepositoryIntegrationTest {
         // Then
         assertNotNull(prices);
         assertEquals(2, prices.size()); // Precio base + promocional
-        
+
         // Verificar que ambos precios son aplicables en esa fecha
         prices.forEach(price -> {
             assertEquals(productId, price.getProductId());
@@ -136,7 +135,7 @@ class PriceRepositoryIntegrationTest {
         // Inicio exacto de la promoción
         LocalDateTime promotionStart = LocalDateTime.of(2020, 6, 14, 15, 0);
         List<Price> pricesAtStart = priceRepository.findApplicablePrices(productId, brandId, promotionStart);
-        
+
         // Final exacto de la promoción
         LocalDateTime promotionEnd = LocalDateTime.of(2020, 6, 14, 18, 30);
         List<Price> pricesAtEnd = priceRepository.findApplicablePrices(productId, brandId, promotionEnd);
@@ -145,7 +144,7 @@ class PriceRepositoryIntegrationTest {
         assertNotNull(pricesAtStart);
         assertNotNull(pricesAtEnd);
         assertEquals(2, pricesAtStart.size()); // Base + promocional
-        assertEquals(2, pricesAtEnd.size());   // Base + promocional
+        assertEquals(2, pricesAtEnd.size()); // Base + promocional
     }
 
     @Test
@@ -154,11 +153,11 @@ class PriceRepositoryIntegrationTest {
         // Given
         ProductId productId = new ProductId(35455L);
         BrandId brandId = new BrandId(1L);
-        
+
         LocalDateTime[] testDates = {
-                LocalDateTime.of(2020, 6, 14, 0, 0, 0),     // Medianoche
-                LocalDateTime.of(2020, 6, 14, 12, 30, 45),  // Con segundos
-                LocalDateTime.of(2020, 6, 14, 23, 59, 59)   // Final del día
+                LocalDateTime.of(2020, 6, 14, 0, 0, 0), // Medianoche
+                LocalDateTime.of(2020, 6, 14, 12, 30, 45), // Con segundos
+                LocalDateTime.of(2020, 6, 14, 23, 59, 59) // Final del día
         };
 
         // When & Then
@@ -176,20 +175,21 @@ class PriceRepositoryIntegrationTest {
         ProductId productId = new ProductId(35455L);
         BrandId brandId = new BrandId(1L);
         LocalDateTime applicationDate = LocalDateTime.of(2020, 6, 14, 10, 0);
-        
+
         // When - Simular múltiples consultas
         long startTime = System.currentTimeMillis();
-        
+
         for (int i = 0; i < 100; i++) {
             List<Price> prices = priceRepository.findApplicablePrices(productId, brandId, applicationDate);
             assertNotNull(prices);
             assertFalse(prices.isEmpty());
         }
-        
+
         long endTime = System.currentTimeMillis();
         long duration = endTime - startTime;
-        
-        // Then - Las consultas deberían ser rápidas (menos de 1 segundo para 100 consultas)
+
+        // Then - Las consultas deberían ser rápidas (menos de 1 segundo para 100
+        // consultas)
         assertTrue(duration < 1000, "Las consultas tardaron más de lo esperado: " + duration + "ms");
     }
 }

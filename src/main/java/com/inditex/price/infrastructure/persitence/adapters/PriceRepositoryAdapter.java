@@ -1,11 +1,9 @@
 package com.inditex.price.infrastructure.persitence.adapters;
 
-
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.inditex.price.domain.model.Price;
@@ -22,24 +20,23 @@ import com.inditex.price.infrastructure.persitence.repositories.PriceJpaReposito
  */
 @Repository
 public class PriceRepositoryAdapter implements PriceRepository {
-    
+
     private final PriceJpaRepository priceJpaRepostory;
     private final PriceEntityMapper priceEntityMapper;
-    
-    public PriceRepositoryAdapter(PriceJpaRepository priceJpaRepostory,PriceEntityMapper priceEntityMapper) {
+
+    public PriceRepositoryAdapter(PriceJpaRepository priceJpaRepostory, PriceEntityMapper priceEntityMapper) {
         this.priceJpaRepostory = priceJpaRepostory;
-        this.priceEntityMapper=priceEntityMapper;
+        this.priceEntityMapper = priceEntityMapper;
 
     }
-    
+
     @Override
-    public List<Price> findApplicablePrices(ProductId productId, BrandId brandId, LocalDateTime applicationDate){
+    public List<Price> findApplicablePrices(ProductId productId, BrandId brandId, LocalDateTime applicationDate) {
         List<PriceJpaEntity> priceEntities = priceJpaRepostory.findApplicablePrices(
                 brandId.getValue(),
                 productId.getValue(),
-                applicationDate
-        );
-        
+                applicationDate);
+
         return priceEntities.stream()
                 .map(priceEntityMapper::toDomain)
                 .collect(Collectors.toList());

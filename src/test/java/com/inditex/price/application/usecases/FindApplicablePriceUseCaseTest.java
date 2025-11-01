@@ -1,7 +1,6 @@
 package com.inditex.price.application.usecases;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -55,7 +54,7 @@ class FindApplicablePriceUseCaseTest {
     private PriceDomainService priceDomainService;
 
     private FindApplicablePriceUseCase useCase;
-    
+
     private Validator validator;
 
     @BeforeEach
@@ -121,7 +120,7 @@ class FindApplicablePriceUseCaseTest {
         // Given
         LocalDateTime applicationDate = LocalDateTime.of(2020, 6, 14, 16, 0);
         PriceQueryRequestDTO request = new PriceQueryRequestDTO(applicationDate, 35455L, 1L);
-        
+
         Price basePrice = createMockPrice(1L, 0, BigDecimal.valueOf(35.50));
         Price promotionalPrice = createMockPrice(2L, 1, BigDecimal.valueOf(25.45));
         List<Price> prices = Arrays.asList(basePrice, promotionalPrice);
@@ -145,11 +144,11 @@ class FindApplicablePriceUseCaseTest {
     void shouldHandleDifferentApplicationDates() {
         // Given - Test para cada una de las 5 casuísticas
         LocalDateTime[] testDates = {
-                LocalDateTime.of(2020, 6, 14, 10, 0),  // Caso 1
-                LocalDateTime.of(2020, 6, 14, 16, 0),  // Caso 2
-                LocalDateTime.of(2020, 6, 14, 21, 0),  // Caso 3
-                LocalDateTime.of(2020, 6, 15, 10, 0),  // Caso 4
-                LocalDateTime.of(2020, 6, 16, 21, 0)   // Caso 5
+                LocalDateTime.of(2020, 6, 14, 10, 0), // Caso 1
+                LocalDateTime.of(2020, 6, 14, 16, 0), // Caso 2
+                LocalDateTime.of(2020, 6, 14, 21, 0), // Caso 3
+                LocalDateTime.of(2020, 6, 15, 10, 0), // Caso 4
+                LocalDateTime.of(2020, 6, 16, 21, 0) // Caso 5
         };
 
         for (LocalDateTime date : testDates) {
@@ -174,15 +173,11 @@ class FindApplicablePriceUseCaseTest {
     @Test
     @DisplayName("Debería validar correctamente los parámetros de entrada")
     void shouldValidateInputParameters() {
-    	// Given
-        LocalDateTime applicationDate = LocalDateTime.now();
+        // Given
         PriceQueryRequestDTO dto = new PriceQueryRequestDTO(null, null, null);
 
         // When
         Set<ConstraintViolation<PriceQueryRequestDTO>> violations = validator.validate(dto);
-
-        
-        
 
         // Then
         // Debe haber 3 errores
