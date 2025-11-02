@@ -1,6 +1,5 @@
 package com.inditex.price.application.usecases;
 
-
 import java.util.List;
 import java.util.Optional;
 
@@ -24,18 +23,18 @@ import com.inditex.price.domain.valueobject.ProductId;
  */
 @Service
 public class FindApplicablePriceUseCase {
-    
+
     private static final Logger logger = LogManager.getLogger(FindApplicablePriceUseCase.class);
-    
+
     private final PriceRepository priceRepository;
     private final PriceDomainService priceDomainService;
-    
-    public FindApplicablePriceUseCase(PriceRepository priceRepository, 
-                                     PriceDomainService priceDomainService) {
+
+    public FindApplicablePriceUseCase(PriceRepository priceRepository,
+            PriceDomainService priceDomainService) {
         this.priceRepository = priceRepository;
         this.priceDomainService = priceDomainService;
     }
-    
+
     /**
      * Ejecuta la consulta de precio aplicable en la fecha indicada
      * 
@@ -45,51 +44,45 @@ public class FindApplicablePriceUseCase {
      */
     public PriceQueryResponseDTO execute(PriceQueryRequestDTO request) {
 
-        logger.debug("Ejecutando caso de uso FindApplicablePrice con request: {}", request);
-        
         BrandId brandId = new BrandId(request.getBrandId());
         ProductId productId = new ProductId(request.getProductId());
-        
-        logger.debug("Value objects creados - ProductId: {}, BrandId: {}", productId, brandId);
-        
+
         // Buscar precios aplicables
         logger.debug("Buscando precios aplicables en repositorio...");
         List<Price> applicablePrices = priceRepository.findApplicablePrices(
-                 productId, brandId,request.getApplicationDate()
-        );
-        
+                productId, brandId, request.getApplicationDate());
+
         // Manejar caso de repositorio que devuelve null
         if (applicablePrices == null) {
-            logger.warn("El repositorio devolvió null para producto {} marca {} en fecha {}", 
-                       request.getProductId(), request.getBrandId(), request.getApplicationDate());
+            logger.warn("El repositorio devolvió null para producto {} marca {} en fecha {}",
+                    request.getProductId(), request.getBrandId(), request.getApplicationDate());
             applicablePrices = java.util.Collections.emptyList();
         }
-        
-        logger.info("Encontrados {} precios aplicables para producto {} marca {} en fecha {}", 
-                   applicablePrices.size(), request.getProductId(), request.getBrandId(), request.getApplicationDate());
-        
-        // Aplicar regla de negocio para seleccionar el precio con mayor prioridad
-        logger.debug("Aplicando regla de negocio para seleccionar precio con mayor prioridad...");
+
+        logger.info("Encontrados {} precios aplicables para producto {} marca {} en fecha {}",
+                applicablePrices.size(), request.getProductId(), request.getBrandId(), request.getApplicationDate());
+
+        // Seleccionar el precio con mayor prioridad
         Optional<Price> selectedPrice = priceDomainService.selectHighestPriorityPrice(applicablePrices);
-        
+
         // Verificar que se encontró un precio
         Price price = selectedPrice.orElseThrow(() -> {
-            logger.warn("No se encontró precio aplicable para producto {} de marca {} en fecha {}", 
-                       request.getProductId(), request.getBrandId(), request.getApplicationDate());
-            
-            return new PriceNotFoundException("No se encontró precio aplicable para producto " 
-                    + request.getProductId() + " de marca " + request.getBrandId() 
+            logger.warn("No se encontró precio aplicable para producto {} de marca {} en fecha {}",
+                    request.getProductId(), request.getBrandId(), request.getApplicationDate());
+
+            return new PriceNotFoundException("No se encontró precio aplicable para producto "
+                    + request.getProductId() + " de marca " + request.getBrandId()
                     + " en fecha " + request.getApplicationDate());
         });
-        
-        logger.info("Precio seleccionado - ID: {}, Precio: {}, Lista: {}, Prioridad: {}, ProductId: {}, BrandId: {}", 
-                   price.getId(), price.getPrice().getAmount(), price.getPriceList(), price.getPriority(),
-                   request.getProductId(), request.getBrandId());
-        
+
+        logger.info("Precio seleccionado - ID: {}, Precio: {}, Lista: {}, Prioridad: {}, ProductId: {}, BrandId: {}",
+                price.getId(), price.getPrice().getAmount(), price.getPriceList(), price.getPriority(),
+                request.getProductId(), request.getBrandId());
+
         // Convertir a DTO de respuesta
         PriceQueryResponseDTO response = PriceMapperDTO.INSTANCE.toResponseDTO(price);
         logger.debug("DTO de respuesta creado: {}", response);
-        
+
         return response;
     }
 }

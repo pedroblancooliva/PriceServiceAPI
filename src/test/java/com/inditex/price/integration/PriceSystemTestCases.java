@@ -22,7 +22,7 @@ import org.springframework.test.web.servlet.MockMvc;
  * Estas son las consultas exactas que se solicitan tradicionalmente en el test
  */
 @SpringBootTest
-@AutoConfigureMockMvc 
+@AutoConfigureMockMvc
 @TestPropertySource(locations = "classpath:application-test.properties")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class PriceSystemTestCases {
@@ -141,7 +141,8 @@ class PriceSystemTestCases {
                 .andExpect(jsonPath("$.priceList").value(2))
                 .andExpect(jsonPath("$.price").value(25.45));
 
-        // Un minuto después del final de la promoción (18:31) - debe volver al precio base
+        // Un minuto después del final de la promoción (18:31) - debe volver al precio
+        // base
         mockMvc.perform(get(BASE_URL)
                 .param("applicationDate", "2020-06-14T18:31:00")
                 .param("productId", PRODUCT_ID)
@@ -155,7 +156,8 @@ class PriceSystemTestCases {
     @Order(7)
     @DisplayName("Caso adicional: Verificación de prioridades con solapamiento")
     void testCase_PriorityOverlapping() throws Exception {
-        // Durante el solapamiento entre precio base (prioridad 0) y promocional (prioridad 1)
+        // Durante el solapamiento entre precio base (prioridad 0) y promocional
+        // (prioridad 1)
         // Debe devolver el de mayor prioridad (promocional)
         mockMvc.perform(get(BASE_URL)
                 .param("applicationDate", "2020-06-15T10:30:00")
@@ -170,9 +172,10 @@ class PriceSystemTestCases {
     @Order(8)
     @DisplayName("Caso de stress: Múltiples consultas concurrentes del mismo caso")
     void testCase_ConcurrentRequests() throws Exception {
-        // Ejecutar múltiples consultas del caso más complejo para verificar concurrencia
+        // Ejecutar múltiples consultas del caso más complejo para verificar
+        // concurrencia
         int numberOfRequests = 50;
-        
+
         for (int i = 0; i < numberOfRequests; i++) {
             mockMvc.perform(get(BASE_URL)
                     .param("applicationDate", "2020-06-14T16:00:00")

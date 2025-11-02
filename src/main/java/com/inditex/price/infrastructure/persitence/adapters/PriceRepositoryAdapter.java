@@ -36,11 +36,9 @@ public class PriceRepositoryAdapter implements PriceRepository {
 
     @Override
     public List<Price> findApplicablePrices(ProductId productId, BrandId brandId, LocalDateTime applicationDate) {
-        logger.debug("Buscando precios aplicables - ProductId: {}, BrandId: {}, Fecha: {}", 
-                    productId.getValue(), brandId.getValue(), applicationDate);
-        
+
         long startTime = System.currentTimeMillis();
-        
+
         try {
             List<PriceJpaEntity> priceEntities = priceJpaRepostory.findApplicablePrices(
                     brandId.getValue(),
@@ -48,33 +46,27 @@ public class PriceRepositoryAdapter implements PriceRepository {
                     applicationDate);
 
             long queryTime = System.currentTimeMillis() - startTime;
-            
-            logger.info("Consulta a base de datos completada - ProductId: {}, BrandId: {}, Resultados: {}, Tiempo: {}ms", 
-                       productId.getValue(), brandId.getValue(), priceEntities.size(), queryTime);
-            
-            if (logger.isDebugEnabled() && !priceEntities.isEmpty()) {
-                priceEntities.forEach(entity -> 
-                    logger.debug("Entidad encontrada - ID: {}, Precio: {}, Lista: {}, Prioridad: {}, Inicio: {}, Fin: {}", 
-                               entity.getId(), entity.getPrice(), entity.getPriceList(), 
-                               entity.getPriority(), entity.getStartDate(), entity.getEndDate())
-                );
-            }
+
+            logger.info(
+                    "Consulta a base de datos completada - ProductId: {}, BrandId: {}, Resultados: {}, Tiempo: {}ms",
+                    productId.getValue(), brandId.getValue(), priceEntities.size(), queryTime);
 
             List<Price> domainPrices = priceEntities.stream()
                     .map(priceEntityMapper::toDomain)
                     .collect(Collectors.toList());
-            
+
             long totalTime = System.currentTimeMillis() - startTime;
-            
-            logger.debug("Mapeo a objetos de dominio completado - Total: {}, Tiempo total: {}ms", 
-                        domainPrices.size(), totalTime);
-            
+
+            logger.debug("Mapeo a objetos de dominio completado - Total: {}, Tiempo total: {}ms",
+                    domainPrices.size(), totalTime);
+
             return domainPrices;
-            
+
         } catch (Exception e) {
             long errorTime = System.currentTimeMillis() - startTime;
-            logger.error("Error en consulta de precios aplicables - ProductId: {}, BrandId: {}, Fecha: {}, Tiempo: {}ms, Error: {}", 
-                        productId.getValue(), brandId.getValue(), applicationDate, errorTime, e.getMessage(), e);
+            logger.error(
+                    "Error en consulta de precios aplicables - ProductId: {}, BrandId: {}, Fecha: {}, Tiempo: {}ms, Error: {}",
+                    productId.getValue(), brandId.getValue(), applicationDate, errorTime, e.getMessage(), e);
             throw e;
         }
     }

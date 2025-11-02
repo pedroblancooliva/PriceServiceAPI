@@ -125,63 +125,24 @@
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>${jacoco.version}</version>
                 <configuration>
-					<!-- Exclusiones globales -->
-                <excludes>
-                    <!-- DTOs y Entities (no necesitan test unitarios) -->
-                    <exclude>**/dto/**</exclude>
-                    <exclude>**/entity/**</exclude>
-                    <!-- Clases de configuración y excepciones -->
-                    <exclude>**/config/**</exclude>
-                    <exclude>**/exception/**</exclude>
-                    <!-- Clases generadas o sin lógica -->
-                    <exclude>**/*Application*</exclude>
-                </excludes>
- 				<rules>
-                    <!-- Regla 1: capa domain -->
-                    <rule>
-                        <element>PACKAGE</element>
-                        <includes>
-                            <include>com/inditex/price/domain/*</include>
-                        </includes>
-                        <limits>
-                            <limit>
-                                <counter>LINE</counter>
-                                <value>COVEREDRATIO</value>
-                                <minimum>0.80</minimum>
-                            </limit>
-                        </limits>
-                    </rule>
-
-                    <!-- Regla 2: capa application -->
-                    <rule>
-                        <element>PACKAGE</element>
-                        <includes>
-                            <include>com/inditex/price/application/*</include>
-                        </includes>
-                        <limits>
-                            <limit>
-                                <counter>LINE</counter>
-                                <value>COVEREDRATIO</value>
-                                <minimum>0.70</minimum>
-                            </limit>
-                        </limits>
-                    </rule>
-
-                    <!-- Regla 3: capa infrastructure -->
-                    <rule>
-                        <element>PACKAGE</element>
-                        <includes>
-                            <include>com/inditex/price/infrastructure/*</include>
-                        </includes>
-                        <limits>
-                            <limit>
-                                <counter>LINE</counter>
-                                <value>COVEREDRATIO</value>
-                                <minimum>0.60</minimum>
-                            </limit>
-                        </limits>
-                    </rule>
-                </rules>
+					<excludes>
+						<exclude>**/dto/**</exclude>
+						<exclude>**/entity/**</exclude>
+						<exclude>**/valueobject/**</exclude>
+						<exclude>**/*MapperImpl.class</exclude>
+					</excludes>
+					<rules>
+                        <rule>
+                            <element>PACKAGE</element>
+                            <limits>
+                                <limit>
+                                    <counter>LINE</counter>
+                                    <value>COVEREDRATIO</value>
+                                    <minimum>0.80</minimum>
+                                </limit>
+                            </limits>
+                        </rule>
+                    </rules>
 				</configuration>
                 <executions>
                     <execution>

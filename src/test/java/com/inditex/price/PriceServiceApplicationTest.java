@@ -34,8 +34,9 @@ class PriceServiceApplicationTest {
     @DisplayName("Debería ejecutar main sin lanzar excepciones")
     void shouldRunMainWithoutExceptions() {
         // Given
-        String[] args = {"--spring.main.web-environment=false", "--spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration"};
-        
+        String[] args = { "--spring.main.web-environment=false",
+                "--spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration" };
+
         // When & Then
         assertDoesNotThrow(() -> {
             // Simulamos el arranque sin el servidor web para evitar conflictos de puerto
@@ -48,10 +49,11 @@ class PriceServiceApplicationTest {
     void shouldHaveSpringBootApplicationAnnotation() {
         // Given
         Class<PriceServiceApplication> applicationClass = PriceServiceApplication.class;
-        
+
         // When
-        boolean hasAnnotation = applicationClass.isAnnotationPresent(org.springframework.boot.autoconfigure.SpringBootApplication.class);
-        
+        boolean hasAnnotation = applicationClass
+                .isAnnotationPresent(org.springframework.boot.autoconfigure.SpringBootApplication.class);
+
         // Then
         assertTrue(hasAnnotation, "La clase debe tener la anotación @SpringBootApplication");
     }
@@ -61,10 +63,10 @@ class PriceServiceApplicationTest {
     void shouldBePublicClass() {
         // Given
         Class<PriceServiceApplication> applicationClass = PriceServiceApplication.class;
-        
+
         // When
         int modifiers = applicationClass.getModifiers();
-        
+
         // Then
         assertTrue(java.lang.reflect.Modifier.isPublic(modifiers), "La clase debe ser pública");
     }
@@ -75,8 +77,10 @@ class PriceServiceApplicationTest {
         // When & Then
         assertDoesNotThrow(() -> {
             java.lang.reflect.Method mainMethod = PriceServiceApplication.class.getMethod("main", String[].class);
-            assertTrue(java.lang.reflect.Modifier.isStatic(mainMethod.getModifiers()), "El método main debe ser estático");
-            assertTrue(java.lang.reflect.Modifier.isPublic(mainMethod.getModifiers()), "El método main debe ser público");
+            assertTrue(java.lang.reflect.Modifier.isStatic(mainMethod.getModifiers()),
+                    "El método main debe ser estático");
+            assertTrue(java.lang.reflect.Modifier.isPublic(mainMethod.getModifiers()),
+                    "El método main debe ser público");
         });
     }
 }

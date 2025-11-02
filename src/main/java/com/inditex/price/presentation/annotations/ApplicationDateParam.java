@@ -16,8 +16,6 @@ import javax.validation.constraints.NotNull;
 @Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.RUNTIME)
 @NotNull(message = "La fecha de aplicación es obligatoria")
-@Parameter(description = "Fecha de aplicación del precio (formato: yyyy-MM-ddTHH:mm:ss)", 
-           example = "2020-06-14T10:00:00", 
-           required = true)
+@Parameter(description = "Fecha de aplicación del precio (formato: yyyy-MM-ddTHH:mm:ss)", example = "2020-06-14T10:00:00", required = true)
 public @interface ApplicationDateParam {
 }

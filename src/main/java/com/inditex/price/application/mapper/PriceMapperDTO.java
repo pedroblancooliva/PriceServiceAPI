@@ -17,7 +17,7 @@ import com.inditex.price.domain.valueobject.ProductId;
  * la separación entre capas
  */
 
-@Mapper(componentModel = "spring") 
+@Mapper(componentModel = "spring")
 public interface PriceMapperDTO {
     PriceMapperDTO INSTANCE = Mappers.getMapper(PriceMapperDTO.class);
 
@@ -31,22 +31,4 @@ public interface PriceMapperDTO {
     @Mapping(target = "currency", source = "price.price.currency")
     public PriceQueryResponseDTO toResponseDTO(Price price);
 
-    /**
-     * no genera las comprobaciones de los nulos
-     **/
-    default Long map(ProductId id) {
-        return id != null ? id.getValue() : null;
-    }
-
-    default Long map(BrandId id) {
-        return id != null ? id.getValue() : null;
-    }
-
-    default BigDecimal map(Money money) {
-        return money != null ? money.getAmount() : null;
-    }
-
-    default String mapCurrency(Money money) {
-        return money != null ? money.getCurrency() : null;
-    }
 }

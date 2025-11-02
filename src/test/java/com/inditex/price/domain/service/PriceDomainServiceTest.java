@@ -63,7 +63,7 @@ class PriceDomainServiceTest {
         Price lowPriority = createPrice(1L, 0);
         Price mediumPriority = createPrice(2L, 1);
         Price highPriority = createPrice(3L, 2);
-        
+
         List<Price> prices = Arrays.asList(lowPriority, mediumPriority, highPriority);
 
         // When
@@ -77,10 +77,10 @@ class PriceDomainServiceTest {
     @Test
     void shouldReturnLastPriceWhenMultiplePricesHaveSamePriority() {
         // Given
-        Price price1 = createPrice(1L, 1);
-        Price price2 = createPrice(2L, 1);
-        Price price3 = createPrice(3L, 1);
-        
+        Price price1 = createPrice(1L, 1, LocalDateTime.of(2020, 6, 10, 0, 0), LocalDateTime.of(2020, 06, 20, 23, 59));
+        Price price2 = createPrice(2L, 1, LocalDateTime.of(2020, 6, 14, 18, 0), LocalDateTime.of(2020, 06, 14, 18, 00));
+        Price price3 = createPrice(3L, 1, LocalDateTime.of(2020, 6, 15, 11, 0), LocalDateTime.of(2020, 06, 17, 11, 59));
+
         List<Price> prices = Arrays.asList(price1, price2, price3);
 
         // When
@@ -91,12 +91,25 @@ class PriceDomainServiceTest {
         assertEquals(price3, result.get()); // reduce devuelve el último elemento cuando las prioridades son iguales
     }
 
+    private Price createPrice(Long id, Integer priorityValue, LocalDateTime startDate, LocalDateTime endDate) {
+        return Price.builder()
+                .id(id)
+                .brandId(new BrandId(1L))
+                .startDate(startDate)
+                .endDate(endDate)
+                .priceList(1)
+                .productId(new ProductId(35455L))
+                .priority(new Priority(priorityValue))
+                .price(new Money(BigDecimal.valueOf(35.50), "EUR"))
+                .build();
+    }
+
     private Price createPrice(Long id, Integer priorityValue) {
         return Price.builder()
                 .id(id)
                 .brandId(new BrandId(1L))
                 .startDate(LocalDateTime.of(2020, 6, 14, 0, 0))
-                .endDate(LocalDateTime.of(2020, 12, 31, 23, 59))
+                .endDate(LocalDateTime.of(2020, 6, 14, 18, 0))
                 .priceList(1)
                 .productId(new ProductId(35455L))
                 .priority(new Priority(priorityValue))
