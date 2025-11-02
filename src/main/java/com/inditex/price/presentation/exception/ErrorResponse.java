@@ -5,7 +5,7 @@ package com.inditex.price.presentation.exception;
  * Proporciona estructura estándar para los errores HTTP
  */
 public class ErrorResponse {
-    
+
     private final int status;
     private final String error;
     private final String message;

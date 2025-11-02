@@ -39,7 +39,8 @@ public class PriceController {
 	}
 
 	/**
-	 * Consulta el precio aplicable para un producto de una marca en una fecha específica
+	 * Consulta el precio aplicable para un producto de una marca en una fecha
+	 * específica
 	 * 
 	 * @param applicationDate fecha de aplicación del precio
 	 * @param productId       identificador del producto
@@ -47,21 +48,13 @@ public class PriceController {
 	 * @return precio aplicable con mayor prioridad
 	 */
 	@GetMapping
-	@Operation(summary = "Consultar precio aplicable", 
-			   description = "Obtiene el precio aplicable para un producto de una marca en una fecha específica")
+	@Operation(summary = "Consultar precio aplicable", description = "Obtiene el precio aplicable para un producto de una marca en una fecha específica")
 	public ResponseEntity<PriceQueryResponseDTO> getApplicablePrice(
-			@RequestParam("applicationDate") 
-			@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) 
-			@ApplicationDateParam
-			LocalDateTime applicationDate,
-			
-			@RequestParam("productId") 
-			@ProductIdParam
-			Long productId,
-			
-			@RequestParam("brandId") 
-			@BrandIdParam
-			Long brandId) {
+			@RequestParam("applicationDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) @ApplicationDateParam LocalDateTime applicationDate,
+
+			@RequestParam("productId") @ProductIdParam Long productId,
+
+			@RequestParam("brandId") @BrandIdParam Long brandId) {
 
 		long startTime = System.currentTimeMillis();
 
@@ -70,42 +63,24 @@ public class PriceController {
 
 		try {
 			PriceQueryRequestDTO request = createPriceQueryRequest(applicationDate, productId, brandId);
-			logger.debug("Request DTO creado: {}", request);
 
 			PriceQueryResponseDTO response = findApplicablePriceUseCase.execute(request);
-
-			long duration = System.currentTimeMillis() - startTime;
-			logSuccessfulQuery(productId, brandId, response, duration);
 
 			return ResponseEntity.ok(response);
 
 		} catch (Exception e) {
-			long duration = System.currentTimeMillis() - startTime;
-			logErrorQuery(productId, brandId, applicationDate, duration, e);
+			logger.error("Error en consulta de precio - productId: {}, brandId: {}, fecha: {}, error: {}",
+					productId, brandId, applicationDate, e.getMessage(), e);
 			throw e; // Re-lanzar para que el GlobalExceptionHandler la maneje
 		}
 	}
 
 	/**
 	 * Método auxiliar para crear el DTO de request
+	 * w
 	 */
 	private PriceQueryRequestDTO createPriceQueryRequest(LocalDateTime applicationDate, Long productId, Long brandId) {
 		return new PriceQueryRequestDTO(applicationDate, productId, brandId);
 	}
 
-	/**
-	 * Método auxiliar para logging de consultas exitosas
-	 */
-	private void logSuccessfulQuery(Long productId, Long brandId, PriceQueryResponseDTO response, long duration) {
-		logger.info("Consulta completada exitosamente - productId: {}, brandId: {}, precio: {}, lista: {}, duración: {}ms",
-				productId, brandId, response.getPrice(), response.getPriceList(), duration);
-	}
-
-	/**
-	 * Método auxiliar para logging de errores
-	 */
-	private void logErrorQuery(Long productId, Long brandId, LocalDateTime applicationDate, long duration, Exception e) {
-		logger.error("Error en consulta de precio - productId: {}, brandId: {}, fecha: {}, duración: {}ms, error: {}",
-				productId, brandId, applicationDate, duration, e.getMessage(), e);
-	}
 }

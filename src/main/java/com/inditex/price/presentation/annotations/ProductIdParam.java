@@ -18,8 +18,6 @@ import javax.validation.constraints.Positive;
 @Retention(RetentionPolicy.RUNTIME)
 @NotNull(message = "El ID del producto es obligatorio")
 @Positive(message = "El ID del producto debe ser positivo")
-@Parameter(description = "Identificador único del producto", 
-           example = "35455", 
-           required = true)
+@Parameter(description = "Identificador único del producto", example = "35455", required = true)
 public @interface ProductIdParam {
 }

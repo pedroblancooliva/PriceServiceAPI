@@ -20,10 +20,10 @@ class PriceNotFoundExceptionTest {
     void shouldCreateExceptionWithMessage() {
         // Given
         String expectedMessage = "No se encontró precio aplicable";
-        
+
         // When
         PriceNotFoundException exception = new PriceNotFoundException(expectedMessage);
-        
+
         // Then
         assertNotNull(exception);
         assertEquals(expectedMessage, exception.getMessage());
@@ -37,10 +37,10 @@ class PriceNotFoundExceptionTest {
         // Given
         String expectedMessage = "Error al buscar precio";
         Throwable expectedCause = new IllegalArgumentException("Parámetro inválido");
-        
+
         // When
         PriceNotFoundException exception = new PriceNotFoundException(expectedMessage, expectedCause);
-        
+
         // Then
         assertNotNull(exception);
         assertEquals(expectedMessage, exception.getMessage());
@@ -53,10 +53,10 @@ class PriceNotFoundExceptionTest {
     void shouldCreateExceptionWithNullMessage() {
         // Given
         String nullMessage = null;
-        
+
         // When
         PriceNotFoundException exception = new PriceNotFoundException(nullMessage);
-        
+
         // Then
         assertNotNull(exception);
         assertNull(exception.getMessage());
@@ -69,10 +69,10 @@ class PriceNotFoundExceptionTest {
         // Given
         String message = "Test message";
         Throwable nullCause = null;
-        
+
         // When
         PriceNotFoundException exception = new PriceNotFoundException(message, nullCause);
-        
+
         // Then
         assertNotNull(exception);
         assertEquals(message, exception.getMessage());
@@ -84,7 +84,7 @@ class PriceNotFoundExceptionTest {
     void shouldMaintainExceptionHierarchy() {
         // Given
         PriceNotFoundException exception = new PriceNotFoundException("test");
-        
+
         // When & Then
         assertTrue(exception instanceof RuntimeException);
         assertTrue(exception instanceof Exception);
@@ -96,7 +96,7 @@ class PriceNotFoundExceptionTest {
     void shouldBeThrowableAndCatchable() {
         // Given
         String expectedMessage = "Price not found for testing";
-        
+
         // When & Then
         try {
             throw new PriceNotFoundException(expectedMessage);
@@ -115,11 +115,11 @@ class PriceNotFoundExceptionTest {
         String productNotFound = "No se encontró precio para producto 35455 de marca 1 en fecha 2020-06-14T10:00:00";
         String noValidPrice = "No hay precio válido en el rango de fechas especificado";
         String invalidBrand = "Marca no válida para el producto especificado";
-        
+
         PriceNotFoundException ex1 = new PriceNotFoundException(productNotFound);
         PriceNotFoundException ex2 = new PriceNotFoundException(noValidPrice);
         PriceNotFoundException ex3 = new PriceNotFoundException(invalidBrand);
-        
+
         assertEquals(productNotFound, ex1.getMessage());
         assertEquals(noValidPrice, ex2.getMessage());
         assertEquals(invalidBrand, ex3.getMessage());

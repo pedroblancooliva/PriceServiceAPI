@@ -189,13 +189,11 @@ class PriceEntityMapperTest {
         // Given
         PriceJpaEntity usdEntity = new PriceJpaEntity(
                 1L, LocalDateTime.now(), LocalDateTime.now().plusDays(1),
-                1, 12345L, 0, new BigDecimal("42.75"), "USD"
-        );
+                1, 12345L, 0, new BigDecimal("42.75"), "USD");
 
         PriceJpaEntity gbpEntity = new PriceJpaEntity(
                 2L, LocalDateTime.now(), LocalDateTime.now().plusDays(1),
-                2, 67890L, 1, new BigDecimal("28.99"), "GBP"
-        );
+                2, 67890L, 1, new BigDecimal("28.99"), "GBP");
 
         // When
         Price usdDomain = mapper.toDomain(usdEntity);
@@ -214,13 +212,11 @@ class PriceEntityMapperTest {
         // Given
         PriceJpaEntity maxPriorityEntity = new PriceJpaEntity(
                 1L, LocalDateTime.now(), LocalDateTime.now().plusDays(1),
-                1, 35455L, Integer.MAX_VALUE, new BigDecimal("100.00"), "EUR"
-        );
+                1, 35455L, Integer.MAX_VALUE, new BigDecimal("100.00"), "EUR");
 
         PriceJpaEntity minPriorityEntity = new PriceJpaEntity(
                 1L, LocalDateTime.now(), LocalDateTime.now().plusDays(1),
-                1, 35455L, 0, new BigDecimal("50.00"), "EUR"
-        );
+                1, 35455L, 0, new BigDecimal("50.00"), "EUR");
 
         // When
         Price maxPriorityDomain = mapper.toDomain(maxPriorityEntity);

@@ -18,8 +18,6 @@ import javax.validation.constraints.Positive;
 @Retention(RetentionPolicy.RUNTIME)
 @NotNull(message = "El ID de la marca es obligatorio")
 @Positive(message = "El ID de la marca debe ser positivo")
-@Parameter(description = "Identificador de la marca (cadena)", 
-           example = "1", 
-           required = true)
+@Parameter(description = "Identificador de la marca (cadena)", example = "1", required = true)
 public @interface BrandIdParam {
 }

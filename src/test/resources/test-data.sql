@@ -50,3 +50,6 @@ INSERT INTO prices (brand_id, start_date, end_date, price_list, product_id, prio
 -- Precio con fechas pasadas para tests de rango
 INSERT INTO prices (brand_id, start_date, end_date, price_list, product_id, priority, price, curr) VALUES
 (1, '2019-01-01T00:00:00', '2019-12-31T23:59:59', 6, 35455, 0, 25.00, 'EUR');
+
+INSERT INTO prices (brand_id, start_date, end_date, price_list, product_id, priority, price, curr) VALUES
+(1, '2020-06-16T10:00:00', '2020-06-16T22:00:00', 5, 35455, 1, 40.25, 'EUR');
